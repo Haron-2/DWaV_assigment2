@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    networks:
+      - traffic-net
+
+  sender:
+    build: ./sender
+    environment:
+      - FLASK_URL=http://backend:5000/receive 
+    depends_on:
+      - backend
+    networks:
+      - traffic-net
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    networks:
+      - traffic-net
+
+networks:
+  traffic-net:
+    driver: bridge
